@@ -10,6 +10,10 @@ class Graph extends React.Component {
         this.drawChart()
     }
 
+    clearGraph() {
+
+    }
+
     drawChart() {
         const line = d3.line()
             .x(d => xScale(d.x))
@@ -43,10 +47,14 @@ class Graph extends React.Component {
                 console.log(this.props.data)
             })
 
+        //remove prev path
+        svg.selectAll("path").remove()
+
         const graph = svg.append("path")
             .datum(this.props.data)
                 .attr("d", line)
-                .attr("stroke", "black")
+                .attr("fill", "none")
+                .attr("stroke", "red")
                 .attr("stroke-width", 2)
 
         const text = svg.selectAll("text")

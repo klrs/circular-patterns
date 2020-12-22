@@ -6,6 +6,7 @@ class Canvas extends React.Component {
         super(props);
 
         this.onPlay = this.onPlay.bind(this);
+        this.onClear = this.onClear.bind(this);
 
         this.state = {
             canvasRef: React.createRef(),
@@ -37,6 +38,12 @@ class Canvas extends React.Component {
         ctx.stroke()
     }
 
+    resetPath(ctx) {
+        ctx.closePath()
+        ctx.moveTo(this.state.centerPos.x, this.state.centerPos.y)
+        ctx.beginPath()
+    }
+
     async onPlay() {
 
         for(let i = 0; i < 360; i++) {
@@ -46,18 +53,21 @@ class Canvas extends React.Component {
         }
 
         const ctx = this.state.canvasRef.current.getContext('2d')
-        ctx.closePath()
-        ctx.moveTo(this.state.centerPos.x, this.state.centerPos.y)
-        ctx.beginPath()
+        this.resetPath(ctx)
+    }
+
+    onClear() {
+        const ctx = this.state.canvasRef.current.getContext('2d')
+        this.resetPath(ctx)
+        ctx.clearRect(0, 0, this.state.canvasRef.current.width, this.state.canvasRef.current.height)
     }
 
     render() { return (
         <div className="Canvas">
             <h1>Canvas</h1>
             <canvas ref={this.state.canvasRef} height={480} width={480} />
-            <button onClick={this.onPlay}>
-            Play
-            </button>
+            <button onClick={this.onPlay}>Play</button>
+            <button onClick={this.onClear}>Clear</button>
         </div>
     )}
 
