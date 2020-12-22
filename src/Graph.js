@@ -2,24 +2,6 @@ import React from 'react'
 import * as d3 from "d3";
 
 class Graph extends React.Component {
-
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            svgRef: React.createRef(),
-            data: this.INITIAL_DATA(20, 360)
-        }
-    }
-
-    INITIAL_DATA = (val, size) => {
-        let data = []
-        for(let i = 0; i < size; i++) {
-            data[i] = {x: i, y: val}
-        }
-        return data
-    }
-
     componentDidMount() {
         this.drawChart()
     }
@@ -53,22 +35,16 @@ class Graph extends React.Component {
             .domain([0, 480])
             .range([0, 50]);
 
-        const replaceDataValue = (i, v) => {
-            var tempData = this.state.data
-            tempData[i].y = v
-            this.setState({data: tempData})
-        }
-
         const svg = d3.select("svg")
             .on("click", (event) => {
                 const i = Math.round(xScaleInvert(d3.pointer(event)[0]))
                 const v = Math.round(yScaleInvert(d3.pointer(event)[1]))
-                replaceDataValue(i, v)
-                console.log(this.state.data)
+                this.props.mutateData(i, v)
+                console.log(this.props.data)
             })
 
         const graph = svg.append("path")
-            .datum(this.state.data)
+            .datum(this.props.data)
                 .attr("d", line)
                 .attr("stroke", "black")
                 .attr("stroke-width", 2)
@@ -82,7 +58,8 @@ class Graph extends React.Component {
 
     render () { return (
         <div className="Graph">
-            <svg ref={this.state.svgRef} height={480} width={480}></svg>
+            <h1>Radius graph</h1>
+            <svg height={480} width={480}></svg>
         </div>
         )
     }

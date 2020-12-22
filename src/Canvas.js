@@ -16,7 +16,10 @@ class Canvas extends React.Component {
     }
 
     nextPos(deg, r) {
-        return {x: this.state.centerPos.x + (r * Math.cos(deg/360 * 2*Math.PI)), y: this.state.centerPos.y - (r * Math.sin(deg/360 * 2*Math.PI))}
+        return {
+            x: this.state.centerPos.x + (this.props.data[deg].y * Math.cos(deg/360 * 2*Math.PI)),
+            y: this.state.centerPos.y - (this.props.data[deg].y * Math.sin(deg/360 * 2*Math.PI))
+        }
     }
     
     componentDidMount() {
@@ -36,7 +39,7 @@ class Canvas extends React.Component {
 
     async onPlay() {
 
-        for(let i = 0; i <= 360; i++) {
+        for(let i = 0; i < 360; i++) {
             this.setState({deg: i})
             this.setState({r: this.state.r + (2*Math.sin(this.state.deg))})
             await new Promise(r => setTimeout(r, 1));
@@ -50,6 +53,7 @@ class Canvas extends React.Component {
 
     render() { return (
         <div className="Canvas">
+            <h1>Canvas</h1>
             <canvas ref={this.state.canvasRef} height={480} width={480} />
             <button onClick={this.onPlay}>
             Play

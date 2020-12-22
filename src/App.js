@@ -8,8 +8,10 @@ class App extends React.Component {
   constructor(props) {
     super(props)
 
+    this.replaceDataValue = this.replaceDataValue.bind(this);
+
     this.state = {
-      data: this.generateDataSet(20, 360)
+      data: this.generateDataSet(40, 360)
     }
   }
 
@@ -19,12 +21,26 @@ class App extends React.Component {
         data[i] = {x: i, y: val}
     }
     return data
-}
+  }
+
+  replaceDataValue = (i, v) => {
+    var tempData = this.state.data
+    tempData[i].y = v
+    this.setState({data: tempData})
+  }
+
+  componentDidUpdate() {
+
+  }
 
   render() { return (
     <div className="App">
-      <Canvas/>
-      <Graph/>
+      <Canvas data={this.state.data}/>
+      <Graph data={this.state.data} mutateData={(i, v) => {
+        var tempData = this.state.data
+        tempData[i].y = v
+        this.setState({data: tempData})
+      }}/>
     </div>
   )}
 }
