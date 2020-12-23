@@ -32,20 +32,39 @@ class Graph extends React.Component {
             .range([10, 470]);
 
         const xScaleInvert = d3.scaleLinear()
+            .clamp(true)
             .domain([0, 480])
-            .range([0, 359]);
+            .range([0, 359])
 
         const yScaleInvert = d3.scaleLinear()
+            .clamp(true)
             .domain([0, 480])
-            .range([0, 50]);
+            .range([0, 50])
 
-        const svg = d3.select("svg")
-            .on("click", (event) => {
-                const i = Math.round(xScaleInvert(d3.pointer(event)[0]))
-                const v = Math.round(yScaleInvert(d3.pointer(event)[1]))
+
+        const drag = d3.drag()
+            .on("start", (event) => console.log(yScaleInvert(event.y)))
+            .on("drag", (event, d) => {
+                console.log(event)
+                const i = Math.round(xScaleInvert(event.x))
+                const v = Math.round(yScaleInvert(event.y))
+                console.log(i)
+                console.log(v)
                 this.props.mutateData(i, v)
                 console.log(this.props.data)
             })
+            .on("end", () => console.log("end"))
+
+        const svg = d3.select("svg")
+
+        d3.select("rect")
+            .call(drag)
+            .on("click", event => { if(event.defaultPrevented) return })
+
+            // const i = Math.round(xScaleInvert(d3.pointer(event)[0]))
+            // const v = Math.round(yScaleInvert(d3.pointer(event)[1]))
+            // this.props.mutateData(i, v)
+            // console.log(this.props.data)
 
         //remove prev path
         svg.selectAll("path").remove()
@@ -67,7 +86,11 @@ class Graph extends React.Component {
     render () { return (
         <div className="Graph">
             <h1>Radius graph</h1>
-            <svg height={480} width={480}></svg>
+            <svg height={480} width={480}>
+                <g>
+                    <rect fill={"#d6d6d6"} height={480} width={480}></rect>
+                </g>
+            </svg>
         </div>
         )
     }
