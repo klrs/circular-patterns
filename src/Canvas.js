@@ -10,16 +10,15 @@ class Canvas extends React.Component {
 
         this.state = {
             canvasRef: React.createRef(),
-            deg: 0,
-            r: 20,
+            orientation: 0,
             centerPos: null
         };
     }
 
-    nextPos(deg, r) {
+    nextPos(orientation) {
         return {
-            x: this.state.centerPos.x + (this.props.data[deg].y * Math.cos(deg/360 * 2*Math.PI)),
-            y: this.state.centerPos.y - (this.props.data[deg].y * Math.sin(deg/360 * 2*Math.PI))
+            x: this.state.centerPos.x + (this.props.data.get(orientation) * Math.cos(orientation*2*Math.PI)),
+            y: this.state.centerPos.y - (this.props.data.get(orientation) * Math.sin(orientation*2*Math.PI))
         }
     }
     
@@ -32,9 +31,9 @@ class Canvas extends React.Component {
     }
 
     componentDidUpdate() {
+
         const ctx = this.state.canvasRef.current.getContext('2d')
-        //this.setState({pos: this.nextPos(this.state.deg, this.state.r)})
-        ctx.lineTo(this.nextPos(this.state.deg, this.state.r).x, this.nextPos(this.state.deg, this.state.r).y)
+        ctx.lineTo(this.nextPos(this.state.orientation).x, this.nextPos(this.state.orientation).y)
         ctx.stroke()
     }
 
@@ -46,13 +45,15 @@ class Canvas extends React.Component {
 
     async onPlay() {
 
-        for(let i = 0; i < 360; i++) {
-            this.setState({deg: i})
-            this.setState({r: this.state.r + (2*Math.sin(this.state.deg))})
-            await new Promise(r => setTimeout(r, 1));
+        const ctx = this.state.canvasRef.current.getContext('2d')
+        const STEP = 0.01
+
+        for(let i = 0; i <= 1; i = i + STEP) {
+            this.setState({orientation: i})
+
+            await new Promise(r => setTimeout(r, 5));
         }
 
-        const ctx = this.state.canvasRef.current.getContext('2d')
         this.resetPath(ctx)
     }
 
