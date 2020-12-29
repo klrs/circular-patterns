@@ -12,8 +12,7 @@ class App extends React.Component {
     this.replaceDataValue = this.replaceDataValue.bind(this);
 
     this.state = {
-      data: this.generateDataSet(40, 360),
-      data2: new Data()
+      data: new Data()
     }
   }
 
@@ -35,12 +34,8 @@ class App extends React.Component {
 
   render() { return (
     <div className="App">
-      <Canvas data={this.state.data2}/>
-      <Graph data={this.state.data} mutateData={(i, v) => {
-        var tempData = this.state.data
-        tempData[i].y = v
-        this.setState({data: tempData})
-      }}/>
+      <Canvas data={this.state.data}/>
+      <Graph data={this.state.data}/>
     </div>
   )}
 }

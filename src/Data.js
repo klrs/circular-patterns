@@ -3,8 +3,12 @@ class Data {
     constructor() {
         this.functionList = [{
             xMin: 0,
-            fun: x => 100
+            fun: x => 100*Math.pow(x, 2)
         }]
+    }
+
+    [Symbol.iterator]() {
+        return this.functionList.values()
     }
 
     get(x) {

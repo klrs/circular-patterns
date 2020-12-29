@@ -2,6 +2,16 @@ import React from 'react'
 import * as d3 from "d3";
 
 class Graph extends React.Component {
+
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            width: 480,
+            height: 480
+        }
+    }
+
     componentDidMount() {
         this.drawChart()
     }
@@ -10,85 +20,69 @@ class Graph extends React.Component {
         this.drawChart()
     }
 
-    clearGraph() {
-
-    }
-
     drawChart() {
+
+
+        const margin = {top: 20, right: 20, bottom: 20, left: 20}
+
         const line = d3.line()
             .x(d => xScale(d.x))
             .y(d => yScale(d.y))
 
         const xScale = d3.scaleLinear()
-            .domain([0, 359])
-            .range([0, 480]);
+            .domain([0, 1])
+            .range([0 + margin.right, this.state.width - margin.left]);
 
         const yScale = d3.scaleLinear()
             .domain([0, 50])
-            .range([0, 480]);
-
-        const yScale2 = d3.scaleLinear()
-            .domain([0, 50])
-            .range([10, 470]);
+            .range([0 + margin.top, this.state.height - margin.bottom]);
 
         const xScaleInvert = d3.scaleLinear()
             .clamp(true)
             .domain([0, 480])
-            .range([0, 359])
+            .range([0, 1])
 
         const yScaleInvert = d3.scaleLinear()
             .clamp(true)
             .domain([0, 480])
-            .range([0, 50])
-
-
-        const drag = d3.drag()
-            .on("start", (event) => console.log(yScaleInvert(event.y)))
-            .on("drag", (event, d) => {
-                console.log(event)
-                const i = Math.round(xScaleInvert(event.x))
-                const v = Math.round(yScaleInvert(event.y))
-                console.log(i)
-                console.log(v)
-                this.props.mutateData(i, v)
-                console.log(this.props.data)
-            })
-            .on("end", () => console.log("end"))
+            .range([0, 1])
 
         const svg = d3.select("svg")
 
         d3.select("rect")
-            .call(drag)
-            .on("click", event => { if(event.defaultPrevented) return })
-
-            // const i = Math.round(xScaleInvert(d3.pointer(event)[0]))
-            // const v = Math.round(yScaleInvert(d3.pointer(event)[1]))
-            // this.props.mutateData(i, v)
-            // console.log(this.props.data)
+            .on("click", event => {alert("yeah")})
 
         //remove prev path
         svg.selectAll("path").remove()
 
+        const dataPoints = (STEP) => {
+            let arr = []
+            for(let i = 0; i <= 1; i = i + STEP) arr.push({x: i, y: this.props.data.get(i)})
+            return arr
+        }
+
+        svg.append("g")
+            .attr("transform", `translate(0,${margin.bottom})`)
+            .call(d3.axisTop(xScale))
+
+        svg.append("g")
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(yScale))
+
         const graph = svg.append("path")
-            .datum(this.props.data)
+            .datum(dataPoints(0.1))
                 .attr("d", line)
                 .attr("fill", "none")
                 .attr("stroke", "red")
                 .attr("stroke-width", 2)
-
-        const text = svg.selectAll("text")
-            .data([0, 10, 20, 30, 40, 50]).enter().append("text")
-                .text(d => d)
-                .attr("x", d => 10)
-                .attr("y", d => yScale2(d))
     }
 
     render () { return (
         <div className="Graph">
             <h1>Radius graph</h1>
-            <svg height={480} width={480}>
+            <svg height={this.state.height} width={this.state.width}>
                 <g>
-                    <rect fill={"#d6d6d6"} height={480} width={480}></rect>
+                    <rect fill={"#d6d6d6"} height={this.state.height} width={this.state.width}></rect>
                 </g>
             </svg>
         </div>
