@@ -9,33 +9,30 @@ class App extends React.Component {
   constructor(props) {
     super(props)
 
-    this.replaceDataValue = this.replaceDataValue.bind(this);
-
+    //this.replaceDataValue = this.replaceDataValue.bind(this);
+    this.onChange = this.onChange.bind(this)
     this.state = {
-      data: new Data()
+      //data: []
+      data: new Data([])
     }
   }
 
-  generateDataSet = (val, size) => {
-    let data = []
-    for(let i = 0; i < size; i++) {
-        data[i] = {x: i, y: val}
-    }
-    return data
-  }
-
-  replaceDataValue = (i, v) => {
-    var tempData = this.state.data
-    tempData[i].y = v
-    this.setState({data: tempData})
+  componentDidMount() {
+    this.setState({data: this.state.data.copy()})
+    this.forceUpdate()
   }
 
   componentDidUpdate() {}
 
+  onChange(i, py) {
+    this.state.data.replace(i, py, "linear")
+    this.setState({data: this.state.data.copy()})
+  }
+
   render() { return (
     <div className="App">
       <Canvas data={this.state.data}/>
-      <Graph data={this.state.data}/>
+      <Graph data={this.state.data} onChange={this.onChange}/>
     </div>
   )}
 }

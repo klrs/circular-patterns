@@ -6,54 +6,54 @@ class Graph extends React.Component {
     constructor(props) {
         super(props)
 
-        this.state = {
-            width: 480,
-            height: 480
-        }
+        this.margin = {top: 20, right: 20, bottom: 20, left: 20}
+        this.width = 480; this.height = 480;
+        this.xScale = d3.scaleLinear().domain([0, 1]).range([0 + this.margin.right, this.width - this.margin.left]);
+        this.yScale = d3.scaleLinear().domain([0, 50]).range([0 + this.margin.top, this.height - this.margin.bottom]);
     }
 
     componentDidMount() {
         this.drawChart()
+        this.drawPath()
     }
 
     componentDidUpdate() {
-        this.drawChart()
+        this.drawPath()
     }
 
-    drawChart() {
-
-
-        const margin = {top: 20, right: 20, bottom: 20, left: 20}
-
+    drawPath() {
         const line = d3.line()
-            .x(d => xScale(d.x))
-            .y(d => yScale(d.y))
+            .x(d => this.xScale(d.x))
+            .y(d => this.yScale(d.y))
 
-        const xScale = d3.scaleLinear()
-            .domain([0, 1])
-            .range([0 + margin.right, this.state.width - margin.left]);
+        const drag = d3.drag()
+            .on("drag", (event, d) => {
+                //omits setState, that's why it doesn't work
+                console.log("event: ", event)
+                console.log("d: ", d)
+                console.log("i:", i)
+                this.props.onChange(i, this.yScale.invert(event.y))
+                //d.p.y = this.yScale.invert(event.y)
+                console.log("y:"+this.yScale.invert(event.y))
+            })
+            //.subject({x: this.xScale(0), y: this.yScale(0)})
 
-        const yScale = d3.scaleLinear()
-            .domain([0, 50])
-            .range([0 + margin.top, this.state.height - margin.bottom]);
+        const addPoints = () => {
+            svg.selectAll("pathCircles")
+                .data(this.props.data.pointList)
+                .enter()
+                .append("circle")
+                    .attr("id", "pathPoints")
+                    .attr("cx", d => this.xScale(d.p.x))
+                    .attr("cy", d => this.yScale(d.p.y))
+                    .attr("fill", "red")
+                    .attr("r", 4)
+                    .on("mouseover", function(d) { d3.select(this).attr("stroke", "black").attr("stroke-width", 4) })
+                    .on("mouseout", function(d) { d3.select(this).attr("stroke", "none") })
+                    .call(drag)
+                    .on("click", event => { if(event.defaultPrevented) return })
 
-        const xScaleInvert = d3.scaleLinear()
-            .clamp(true)
-            .domain([0, 480])
-            .range([0, 1])
-
-        const yScaleInvert = d3.scaleLinear()
-            .clamp(true)
-            .domain([0, 480])
-            .range([0, 1])
-
-        const svg = d3.select("svg")
-
-        d3.select("rect")
-            .on("click", event => {alert("yeah")})
-
-        //remove prev path
-        svg.selectAll("path").remove()
+        }
 
         const dataPoints = (STEP) => {
             let arr = []
@@ -61,28 +61,46 @@ class Graph extends React.Component {
             return arr
         }
 
-        svg.append("g")
-            .attr("transform", `translate(0,${margin.bottom})`)
-            .call(d3.axisTop(xScale))
+        const svg = d3.select("svg")
+        const data = dataPoints(0.1)
 
-        svg.append("g")
-            .attr("transform", `translate(${margin.left},0)`)
-            .call(d3.axisLeft(yScale))
+        svg.selectAll("#pathPoints").remove()
+        addPoints()
 
+        svg.selectAll("#dataPath").remove()
         const graph = svg.append("path")
-            .datum(dataPoints(0.1))
+            .attr("id", "dataPath")
+            .datum(data)
                 .attr("d", line)
                 .attr("fill", "none")
                 .attr("stroke", "red")
                 .attr("stroke-width", 2)
     }
 
+    drawChart() {
+        const svg = d3.select("svg")
+
+        const addAxes = () => {
+            svg.append("g")
+            .attr("transform", `translate(0,${this.margin.bottom})`)
+            .call(d3.axisTop(this.xScale))
+
+        svg.append("g")
+            .attr("transform", `translate(${this.margin.left},0)`)
+            .call(d3.axisLeft(this.yScale))
+        }
+
+        // d3.select("rect")
+        //     .on("click", event => {alert("yeah")})
+        addAxes()
+    }
+
     render () { return (
         <div className="Graph">
             <h1>Radius graph</h1>
-            <svg height={this.state.height} width={this.state.width}>
+            <svg height={this.height} width={this.width}>
                 <g>
-                    <rect fill={"#d6d6d6"} height={this.state.height} width={this.state.width}></rect>
+                    <rect fill={"#d6d6d6"} height={this.height} width={this.width}></rect>
                 </g>
             </svg>
         </div>
