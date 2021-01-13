@@ -31,21 +31,21 @@ class Graph extends React.Component {
                 //omits setState, that's why it doesn't work
                 console.log("event: ", event)
                 console.log("d: ", d)
-                console.log("i:", i)
-                this.props.onChange(i, this.yScale.invert(event.y))
+                this.props.onChange(d.value.p.x, this.yScale.invert(event.y))
                 //d.p.y = this.yScale.invert(event.y)
                 console.log("y:"+this.yScale.invert(event.y))
             })
             //.subject({x: this.xScale(0), y: this.yScale(0)})
 
         const addPoints = () => {
+            console.log("addPoints(): ", this.props.data.pointList)
             svg.selectAll("pathCircles")
-                .data(this.props.data.pointList)
+                .data(this.props.data.toList())
                 .enter()
                 .append("circle")
                     .attr("id", "pathPoints")
-                    .attr("cx", d => this.xScale(d.p.x))
-                    .attr("cy", d => this.yScale(d.p.y))
+                    .attr("cx", d => this.xScale(d.value.p.x))
+                    .attr("cy", d => this.yScale(d.value.p.y))
                     .attr("fill", "red")
                     .attr("r", 4)
                     .on("mouseover", function(d) { d3.select(this).attr("stroke", "black").attr("stroke-width", 4) })
@@ -63,7 +63,8 @@ class Graph extends React.Component {
 
         const svg = d3.select("svg")
         const data = dataPoints(0.1)
-
+        console.log(data)
+        
         svg.selectAll("#pathPoints").remove()
         addPoints()
 

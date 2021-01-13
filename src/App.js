@@ -13,13 +13,13 @@ class App extends React.Component {
     this.onChange = this.onChange.bind(this)
     this.state = {
       //data: []
-      data: new Data([])
+      data: new Data({})
     }
   }
 
   componentDidMount() {
-    this.setState({data: this.state.data.copy()})
-    this.forceUpdate()
+    //this.setState({data: this.state.data.copy()})
+    //this.onChange(0, 20)
   }
 
   componentDidUpdate() {}
@@ -27,6 +27,7 @@ class App extends React.Component {
   onChange(i, py) {
     this.state.data.replace(i, py, "linear")
     this.setState({data: this.state.data.copy()})
+
   }
 
   render() { return (

@@ -40,7 +40,7 @@ class Canvas extends React.Component {
     resetPath(ctx) {
         ctx.closePath()
         ctx.moveTo(this.state.centerPos.x, this.state.centerPos.y)
-        ctx.beginPath()
+        //ctx.beginPath()
     }
 
     async onPlay() {

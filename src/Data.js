@@ -15,20 +15,30 @@ class Data {
     constructor(prevPointList) {
         this.pointList = prevPointList
 
-        if(this.pointList.length === 0) {
+        if(Object.keys(this.pointList).length === 0) {
             console.log("Initializing pointList.")
+            this.add({x: 0.5, y: 2}, "linear")
             this.add({x: 1, y: 40}, "constant")
             this.add({x: 0, y: 0}, "linear")
-            //this.replace(1, 20, "linear")
+            //this.replace(0, 20, "linear")
         }
 
         console.log("Constructed pointList: ", this.pointList)
     }
 
     copy() {
-        //creates deep copy of Data. For React
-        let newList = [...this.pointList].map(e => e.copy())
+        //creates deep copy of Data. For React <3
+        let newList = {}
+        for (const [i, v] of Object.entries(this.pointList)) {
+            newList[i] = v.copy()
+        }
         return new Data(newList)
+    }
+
+    toList() {
+        let list = []
+        for (const [i, v] of Object.entries(this.pointList)) list.push({value: v, index: i})
+        return list
     }
 
     [Symbol.iterator]() {
@@ -37,26 +47,15 @@ class Data {
 
     get(x) {
         const prevPoint = this.findPrevPoint(x)
-        if(prevPoint === null) return 0
+        if(prevPoint === null) return this.pointList[0].fun(x)  //first point
         return prevPoint.value.fun(x) 
     }
 
     replace(i, py, type) {
         const p = {x: this.pointList[i].p.x, y: py}
-        this.delete(i)
-        console.log("Post-delete pointList: ", this.pointList)
+        //this.delete(i)
         this.add(p, type)
-        console.log("Post-add pointList: ", this.pointList)
-    }
-
-    delete(i) {
-        //not tested
-        // if(i === 0) { console.log("Cannot remove first point!"); return this.pointList; }
-        // else if(i === this.pointList.length - 1) { console.log("Cannot remove last point!"); return this.pointList; }
-        // else {
-            console.log("Deleted point: ", this.pointList[i])
-            this.pointList.splice(i, 1)
-        //}
+        console.log("Post-replace pointList: ", this.pointList)
     }
 
     add(p1, type) {
@@ -78,18 +77,9 @@ class Data {
                 console.log("Function type not supported. Using default function.")
                 fun = x => 10
         }
-        this.pointList.push(new Point(p1.x, p1.y, fun))
-    }
-
-    findLimitPoints() {
-        let limPoints = {left: null, right: null}
-
-        for(let i = 0; i < this.pointList.length; i++) {
-            if(this.pointList[i].p.x === 0) limPoints.left = {value: this.pointList[i], index: i}
-            else if(this.pointList[i].p.x === 1) limPoints.right = {value: this.pointList[i], index: i}
-        }
-
-        return limPoints
+        this.pointList[p1.x] = (new Point(p1.x, p1.y, fun))
+        let prevPoint = this.findPrevPoint(p1.x)
+        if(prevPoint !== null) this.replace(prevPoint.index, prevPoint.value.p.y, "linear") //type is a guess
     }
 
     findNextPoint(x) {
@@ -97,29 +87,28 @@ class Data {
         // scans every point in pointList
 
         let nextPoint = null
-        for(let i = 0; i < this.pointList.length; i++) {
-            if(x < this.pointList[i].p.x && (nextPoint === null || this.pointList[i].p.x < nextPoint.value.x)) {
-                nextPoint = {value: this.pointList[i], index: i}
+
+        for (const [i, v] of Object.entries(this.pointList)) {
+            if(x < v.p.x && (nextPoint === null || v.p.x < nextPoint.value.p.x)) {
+                nextPoint = {value: v, index: i}
             }
         }
 
-        if(nextPoint === null) console.log("No next point found.")
         return nextPoint
     }
 
-    findPrevPoint(x) {
+    findPrevPoint(x, canBeX) {
         // find previous point relative to x along with the index
         // scans every point in pointList
 
         let prevPoint = null
 
-        for(let i = 0; i < this.pointList.length; i++) {
-            if(x > this.pointList[i].p.x && (prevPoint === null || this.pointList[i].p.x > prevPoint.value.x)) {
-                prevPoint = {value: this.pointList[i], index: i}
+        for (const [i, v] of Object.entries(this.pointList)) {
+            if(x > v.p.x && (prevPoint === null || v.p.x > prevPoint.value.p.x)) {
+                prevPoint = {value: v, index: i}
             }
         }
 
-        if(prevPoint === null) console.log("No previous point found.")
         return prevPoint
     }
 }
