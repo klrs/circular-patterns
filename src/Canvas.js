@@ -26,20 +26,20 @@ class Canvas extends React.Component {
         const cPos = {x: this.state.canvasRef.current.width / 2, y: this.state.canvasRef.current.height / 2}
         this.setState({centerPos: cPos})
         const ctx = this.state.canvasRef.current.getContext('2d')
-        ctx.moveTo(this.state.canvasRef.current.width / 2, this.state.canvasRef.current.height / 2)
-        ctx.beginPath()
+        // ctx.moveTo(this.state.canvasRef.current.width / 2, this.state.canvasRef.current.height / 2)
+        // ctx.beginPath()
     }
 
     componentDidUpdate() {
 
         const ctx = this.state.canvasRef.current.getContext('2d')
         ctx.lineTo(this.nextPos(this.state.orientation).x, this.nextPos(this.state.orientation).y)
-        ctx.stroke()
+        //ctx.stroke()
     }
 
     resetPath(ctx) {
-        ctx.closePath()
-        ctx.moveTo(this.state.centerPos.x, this.state.centerPos.y)
+        //ctx.closePath()
+        //ctx.moveTo(this.state.centerPos.x, this.state.centerPos.y)
         //ctx.beginPath()
     }
 
@@ -48,9 +48,12 @@ class Canvas extends React.Component {
         const ctx = this.state.canvasRef.current.getContext('2d')
         const STEP = 0.01
 
-        for(let i = 0; i <= 1; i = i + STEP) {
-            this.setState({orientation: i})
+        ctx.moveTo(this.state.canvasRef.current.width / 2, this.state.canvasRef.current.height / 2)
+        ctx.beginPath()
 
+        for(let i = 0; i <= 1; i = i + STEP) {
+            ctx.stroke()
+            this.setState({orientation: i})
             await new Promise(r => setTimeout(r, 5));
         }
 

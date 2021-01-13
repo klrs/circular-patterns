@@ -17,9 +17,8 @@ class Data {
 
         if(Object.keys(this.pointList).length === 0) {
             console.log("Initializing pointList.")
-            this.add({x: 0.5, y: 2}, "linear")
-            this.add({x: 1, y: 40}, "constant")
-            this.add({x: 0, y: 0}, "linear")
+            this.add({x: 0, y: 10}, "linear")
+            this.add({x: 1, y: 10}, "constant")
             //this.replace(0, 20, "linear")
         }
 

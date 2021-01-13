@@ -1,5 +1,6 @@
 import React from 'react'
-import * as d3 from "d3";
+import * as d3 from "d3"
+import {mouse} from "d3"
 
 class Graph extends React.Component {
 
@@ -28,12 +29,7 @@ class Graph extends React.Component {
 
         const drag = d3.drag()
             .on("drag", (event, d) => {
-                //omits setState, that's why it doesn't work
-                console.log("event: ", event)
-                console.log("d: ", d)
                 this.props.onChange(d.value.p.x, this.yScale.invert(event.y))
-                //d.p.y = this.yScale.invert(event.y)
-                console.log("y:"+this.yScale.invert(event.y))
             })
             //.subject({x: this.xScale(0), y: this.yScale(0)})
 
@@ -62,7 +58,7 @@ class Graph extends React.Component {
         }
 
         const svg = d3.select("svg")
-        const data = dataPoints(0.1)
+        const data = dataPoints(0.01)
         console.log(data)
         
         svg.selectAll("#pathPoints").remove()
@@ -91,8 +87,10 @@ class Graph extends React.Component {
             .call(d3.axisLeft(this.yScale))
         }
 
-        // d3.select("rect")
-        //     .on("click", event => {alert("yeah")})
+        d3.select("rect")
+            .on("click", event => {
+                this.props.onAdd(this.xScale.invert(d3.pointer(event)[0]), this.yScale.invert(d3.pointer(event)[1]))
+            })
         addAxes()
     }
 
