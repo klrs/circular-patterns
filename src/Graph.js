@@ -7,10 +7,10 @@ class Graph extends React.Component {
     constructor(props) {
         super(props)
 
-        this.margin = {top: 20, right: 20, bottom: 20, left: 20}
+        this.margin = {top: 20, right: 30, bottom: 20, left: 30}
         this.width = 480; this.height = 480;
         this.xScale = d3.scaleLinear().domain([0, 1]).range([0 + this.margin.right, this.width - this.margin.left]);
-        this.yScale = d3.scaleLinear().domain([0, 50]).range([0 + this.margin.top, this.height - this.margin.bottom]);
+        this.yScale = d3.scaleLinear().domain([-50, 50]).range([0 + this.margin.top, this.height - this.margin.bottom]);
     }
 
     componentDidMount() {
@@ -79,7 +79,7 @@ class Graph extends React.Component {
 
         const addAxes = () => {
             svg.append("g")
-            .attr("transform", `translate(0,${this.margin.bottom})`)
+            .attr("transform", `translate(0,${this.width * 0.5})`)
             .call(d3.axisTop(this.xScale))
 
         svg.append("g")

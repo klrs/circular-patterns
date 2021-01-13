@@ -1,7 +1,15 @@
-.App {
+.Meat {
   margin-left: 100px;
   margin-right: 100px;
   display: flex;
+}
+
+.Buttons {
+  text-align: center;
+}
+
+.Buttons button {
+  margin: 50px;
 }
 
 .Canvas {

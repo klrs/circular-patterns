@@ -12,13 +12,13 @@ class Point {
 
 class Data {
 
-    constructor(prevPointList) {
+    constructor(prevPointList, initialize) {
         this.pointList = prevPointList
 
-        if(Object.keys(this.pointList).length === 0) {
+        if(initialize) {
             console.log("Initializing pointList.")
-            this.add({x: 0, y: 10}, "linear")
             this.add({x: 1, y: 10}, "constant")
+            this.add({x: 0, y: 10}, "linear")
             //this.replace(0, 20, "linear")
         }
 
@@ -31,7 +31,18 @@ class Data {
         for (const [i, v] of Object.entries(this.pointList)) {
             newList[i] = v.copy()
         }
-        return new Data(newList)
+        return new Data(newList, false)
+    }
+
+    reverse() {
+        //returns new Data object with points reversed
+        let newData = new Data({}, false)
+        for(const [i, v] of Object.entries(this.pointList)) {
+            if(i === 0) newData.add({x: 1 - v.p.x, y: v.p.y}, "constant")
+            else newData.add({x: 1 - v.p.x, y: v.p.y}, "linear")
+        }
+        console.log(newData)
+        return newData
     }
 
     toList() {

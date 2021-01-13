@@ -23,6 +23,9 @@ class Canvas extends React.Component {
     }
     
     componentDidMount() {
+        this.props.setPlay(this.onPlay)
+        this.props.setClear(this.onClear)
+
         const cPos = {x: this.state.canvasRef.current.width / 2, y: this.state.canvasRef.current.height / 2}
         this.setState({centerPos: cPos})
         const ctx = this.state.canvasRef.current.getContext('2d')
@@ -70,8 +73,6 @@ class Canvas extends React.Component {
         <div className="Canvas">
             <h1>Canvas</h1>
             <canvas ref={this.state.canvasRef} height={480} width={480} />
-            <button onClick={this.onPlay}>Play</button>
-            <button onClick={this.onClear}>Clear</button>
         </div>
     )}
 
