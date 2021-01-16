@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/circular-patterns/static/css/main.c88ec92f.chunk.css",
-    "main.js": "/circular-patterns/static/js/main.7cb68054.chunk.js",
-    "main.js.map": "/circular-patterns/static/js/main.7cb68054.chunk.js.map",
+    "main.js": "/circular-patterns/static/js/main.697da6a8.chunk.js",
+    "main.js.map": "/circular-patterns/static/js/main.697da6a8.chunk.js.map",
     "runtime-main.js": "/circular-patterns/static/js/runtime-main.8a870046.js",
     "runtime-main.js.map": "/circular-patterns/static/js/runtime-main.8a870046.js.map",
-    "static/js/2.c33c3b3c.chunk.js": "/circular-patterns/static/js/2.c33c3b3c.chunk.js",
-    "static/js/2.c33c3b3c.chunk.js.map": "/circular-patterns/static/js/2.c33c3b3c.chunk.js.map",
+    "static/js/2.7bc995e1.chunk.js": "/circular-patterns/static/js/2.7bc995e1.chunk.js",
+    "static/js/2.7bc995e1.chunk.js.map": "/circular-patterns/static/js/2.7bc995e1.chunk.js.map",
     "static/js/3.40804e92.chunk.js": "/circular-patterns/static/js/3.40804e92.chunk.js",
     "static/js/3.40804e92.chunk.js.map": "/circular-patterns/static/js/3.40804e92.chunk.js.map",
     "index.html": "/circular-patterns/index.html",
     "static/css/main.c88ec92f.chunk.css.map": "/circular-patterns/static/css/main.c88ec92f.chunk.css.map",
-    "static/js/2.c33c3b3c.chunk.js.LICENSE.txt": "/circular-patterns/static/js/2.c33c3b3c.chunk.js.LICENSE.txt"
+    "static/js/2.7bc995e1.chunk.js.LICENSE.txt": "/circular-patterns/static/js/2.7bc995e1.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.8a870046.js",
-    "static/js/2.c33c3b3c.chunk.js",
+    "static/js/2.7bc995e1.chunk.js",
     "static/css/main.c88ec92f.chunk.css",
-    "static/js/main.7cb68054.chunk.js"
+    "static/js/main.697da6a8.chunk.js"
   ]
 }
