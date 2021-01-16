@@ -51,6 +51,17 @@ class Data {
         return list
     }
 
+    toSortedList() {
+        let list = this.toList()
+        let sList = list.sort((p1, p2) => {
+            if(p1.index < p2.index) return -1
+            else if(p1.index > p2.index) return 1
+            else return 0
+        })
+        console.log("sortedList:", sList)
+        return sList
+    }
+
     [Symbol.iterator]() {
         return this.pointList.values()
     }

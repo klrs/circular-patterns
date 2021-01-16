@@ -1,6 +1,6 @@
 import React from 'react'
 import * as d3 from "d3"
-import {mouse} from "d3"
+import {index, mouse} from "d3"
 
 class Graph extends React.Component {
 
@@ -51,14 +51,20 @@ class Graph extends React.Component {
 
         }
 
-        const dataPoints = (STEP) => {
-            let arr = []
-            for(let i = 0; i <= 1; i = i + STEP) arr.push({x: i, y: this.props.data.get(i)})
-            return arr
+        // for non linear functions
+        // const dataPoints = (STEP) => {
+        //     let arr = []
+        //     for(let i = 0; i <= 1; i = i + STEP) arr.push({x: i, y: this.props.data.get(i)})
+        //     return arr
+        // }
+
+        const dataPoints = () => {
+            let sortedList = this.props.data.toSortedList()
+            return sortedList.map((e) => { return {x: e.value.p.x, y: e.value.p.y} })
         }
 
         const svg = d3.select("svg")
-        const data = dataPoints(0.01)
+        const data = dataPoints()
         console.log(data)
         
         svg.selectAll("#pathPoints").remove()
