@@ -49,15 +49,20 @@ class Canvas extends React.Component {
     async onPlay() {
 
         const ctx = this.state.canvasRef.current.getContext('2d')
-        const STEP = 0.01
+        const STEP = 0.01 
+        const EXECUTE_TIME_MIN = 200 * STEP //ms
 
         ctx.moveTo(this.state.canvasRef.current.width / 2, this.state.canvasRef.current.height / 2)
         ctx.beginPath()
 
-        for(let i = 0; i <= 1; i = i + STEP) {
+        for(let i = 0; i <= 1 + STEP; i = i + STEP) {
+            let t0 = performance.now()
+            if(i > 1) this.setState({orientation: 1}); else this.setState({orientation: i})
             ctx.stroke()
-            this.setState({orientation: i})
-            await new Promise(r => setTimeout(r, 5));
+            let t1 = performance.now()
+            let deltaTime = t1 - t0
+
+            if(deltaTime < EXECUTE_TIME_MIN) { await new Promise(r => setTimeout(r, EXECUTE_TIME_MIN - deltaTime)); }
         }
 
         this.resetPath(ctx)
