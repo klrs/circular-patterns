@@ -13,7 +13,7 @@ class Point {
 class Data {
 
     constructor(prevPointList, initialize) {
-        this.pointList = prevPointList
+        this.pointList = prevPointList  //not actually a list but an object
 
         if(initialize) {
             console.log("Initializing pointList.")
@@ -40,6 +40,18 @@ class Data {
         for(const [i, v] of Object.entries(this.pointList)) {
             if(i === 0) newData.add({x: 1 - v.p.x, y: v.p.y}, "constant")
             else newData.add({x: 1 - v.p.x, y: v.p.y}, "linear")
+        }
+
+        return newData
+    }
+
+    snap() {
+        const snapValue = this.pointList[1].p.y - this.pointList[0].p.y
+        let newData = new Data({}, false)
+
+        for(const [i, v] of Object.entries(this.pointList)) {
+            if(i === 1) newData.add({x: v.p.x, y: v.p.y + snapValue}, "constant")
+            newData.add({x: v.p.x, y: v.p.y + snapValue}, "linear")
         }
         console.log(newData)
         return newData
@@ -101,6 +113,15 @@ class Data {
         this.pointList[p1.x] = (new Point(p1.x, p1.y, fun))
         let prevPoint = this.findPrevPoint(p1.x)
         if(prevPoint !== null) this.replace(prevPoint.index, prevPoint.value.p.y, "linear") //type is a guess
+    }
+
+    getScale() {
+        const mean = Object.values(this.pointList).reduce((a, b) => {return new Point(0, a.p.y + b.p.y, () => 0)}).p.y / Object.keys(this.pointList).length
+
+        return {
+            min: mean - 50,
+            max: mean + 50
+        }
     }
 
     findNextPoint(x) {

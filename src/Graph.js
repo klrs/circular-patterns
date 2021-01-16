@@ -6,20 +6,37 @@ class Graph extends React.Component {
 
     constructor(props) {
         super(props)
-
         this.margin = {top: 20, right: 30, bottom: 20, left: 30}
         this.width = 480; this.height = 480;
-        this.xScale = d3.scaleLinear().domain([0, 1]).range([0 + this.margin.right, this.width - this.margin.left]);
-        this.yScale = d3.scaleLinear().domain([-50, 50]).range([0 + this.margin.top, this.height - this.margin.bottom]);
+        this.xScale = null
+        this.yScale = null
     }
 
     componentDidMount() {
+        this.xScale = this.getXScaleFun()
+        this.yScale = this.getYScaleFun()
         this.drawChart()
         this.drawPath()
     }
 
     componentDidUpdate() {
+        this.xScale = this.getXScaleFun()
+        this.yScale = this.getYScaleFun()
+        this.drawChart()
         this.drawPath()
+    }
+
+    getXScaleFun() {
+        return d3.scaleLinear()
+            .domain([this.props.xMin, this.props.xMax])
+            .range([0 + this.margin.right, this.width - this.margin.left])
+            .clamp(true);
+    }
+
+    getYScaleFun() {
+        return d3.scaleLinear()
+            .domain([this.props.yMin, this.props.yMax])
+            .range([0 + this.margin.top, this.height - this.margin.bottom])
     }
 
     drawPath() {
@@ -82,13 +99,15 @@ class Graph extends React.Component {
 
     drawChart() {
         const svg = d3.select("svg")
-
+        console.log("drawChart:" + this.yScale.domain()[0])
         const addAxes = () => {
             svg.append("g")
+            .attr("class", "axes")
             .attr("transform", `translate(0,${this.width * 0.5})`)
             .call(d3.axisTop(this.xScale))
 
-        svg.append("g")
+            svg.append("g")
+            .attr("class", "axes")
             .attr("transform", `translate(${this.margin.left},0)`)
             .call(d3.axisLeft(this.yScale))
         }
@@ -97,6 +116,7 @@ class Graph extends React.Component {
             .on("click", event => {
                 this.props.onAdd(this.xScale.invert(d3.pointer(event)[0]), this.yScale.invert(d3.pointer(event)[1]))
             })
+        svg.selectAll(".axes").remove()
         addAxes()
     }
 
