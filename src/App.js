@@ -45,6 +45,7 @@ class App extends React.Component {
 
   onSnap() {
     console.log("scale:" + this.state.yScaleMin + " " + this.state.yScaleMax)
+
     this.setState({
       data: this.state.data.snap(),
       yScaleMin: this.state.data.getScale().min,

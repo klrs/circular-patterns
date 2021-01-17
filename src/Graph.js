@@ -36,7 +36,8 @@ class Graph extends React.Component {
     getYScaleFun() {
         return d3.scaleLinear()
             .domain([this.props.yMin, this.props.yMax])
-            .range([0 + this.margin.top, this.height - this.margin.bottom])
+            //.range([0 + this.margin.top, this.height - this.margin.bottom])
+            .range([this.height - this.margin.bottom, 0 + this.margin.top])
     }
 
     drawPath() {
@@ -99,17 +100,35 @@ class Graph extends React.Component {
 
     drawChart() {
         const svg = d3.select("svg")
-        console.log("drawChart:" + this.yScale.domain()[0])
         const addAxes = () => {
             svg.append("g")
-            .attr("class", "axes")
-            .attr("transform", `translate(0,${this.width * 0.5})`)
-            .call(d3.axisTop(this.xScale))
+                .attr("class", "axes")
+                .attr("transform", `translate(0,${this.margin.top})`)
+                .call(d3.axisTop(this.xScale))
+                //.call(d3.axisBottom(this.xScale).ticks(5))
 
             svg.append("g")
-            .attr("class", "axes")
-            .attr("transform", `translate(${this.margin.left},0)`)
-            .call(d3.axisLeft(this.yScale))
+                .attr("class", "axes")
+                .attr("transform", `translate(${this.margin.left},0)`)
+                .call(d3.axisLeft(this.yScale))
+        }
+
+        const addGrid = () => {
+            svg.append("g")
+                .attr("class", "grid")
+                .attr("transform", `translate(0, ${this.margin.top})`)
+                .call(d3.axisBottom(this.xScale).ticks(5)
+                    .tickFormat("")
+                    .tickSize(this.height - this.margin.top - this.margin.bottom)
+                )
+
+            svg.append("g")
+                .attr("class", "grid")
+                .attr("transform", `translate(${this.margin.left},0)`)
+                .call(d3.axisRight(this.yScale).ticks(5)
+                    .tickFormat("")
+                    .tickSize(this.width - this.margin.left - this.margin.right)
+                )  
         }
 
         d3.select("rect")
@@ -117,7 +136,9 @@ class Graph extends React.Component {
                 this.props.onAdd(this.xScale.invert(d3.pointer(event)[0]), this.yScale.invert(d3.pointer(event)[1]))
             })
         svg.selectAll(".axes").remove()
+        svg.selectAll(".grid").remove()
         addAxes()
+        addGrid()
     }
 
     render () { return (

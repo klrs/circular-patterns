@@ -19,3 +19,7 @@
 .Graph {
   margin: auto;
 }
+
+.grid line {
+  stroke: rgb(134, 134, 134);
+}

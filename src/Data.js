@@ -115,12 +115,19 @@ class Data {
         if(prevPoint !== null) this.replace(prevPoint.index, prevPoint.value.p.y, "linear") //type is a guess
     }
 
-    getScale() {
-        const mean = Object.values(this.pointList).reduce((a, b) => {return new Point(0, a.p.y + b.p.y, () => 0)}).p.y / Object.keys(this.pointList).length
+    // getScale() {
+    //     const mean = Object.values(this.pointList).reduce((a, b) => {return new Point(0, a.p.y + b.p.y, () => 0)}).p.y / Object.keys(this.pointList).length
 
+    //     return {
+    //         min: mean - 50,
+    //         max: mean + 50
+    //     }
+    // }
+
+    getScale() {
         return {
-            min: mean - 50,
-            max: mean + 50
+            min: this.pointList[1].p.y - 50,
+            max: this.pointList[1].p.y + 50
         }
     }
 
