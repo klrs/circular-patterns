@@ -1,23 +1,39 @@
-.Meat {
-  margin-left: 100px;
-  margin-right: 100px;
-  display: flex;
+.HeadBar {
+  background-color: red;
 }
 
-.Buttons {
+.HeadBar #logo {
   text-align: center;
 }
 
-.Buttons button {
-  margin: 50px;
+.HeadBar #header {
+  text-align: center
 }
 
-.Canvas {
-  margin: auto;
+
+.Meat {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.Graph {
-  margin: auto;
+.ButtonContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.ButtonContainer button {
+  background-color: red;
+  color: white;
+  display: block;
+  font-size: 16px;
+  padding: 14px 28px;
+  width: 100%;
+  border: none;
+}
+
+.ButtonContainer button:hover {
+  background-color: rgb(134, 134, 134);
 }
 
 .grid line {

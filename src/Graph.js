@@ -7,7 +7,7 @@ class Graph extends React.Component {
     constructor(props) {
         super(props)
         this.margin = {top: 20, right: 30, bottom: 20, left: 30}
-        this.width = 480; this.height = 480;
+        this.width = 720; this.height = 650;
         this.xScale = null
         this.yScale = null
     }
@@ -61,7 +61,7 @@ class Graph extends React.Component {
                     .attr("cx", d => this.xScale(d.value.p.x))
                     .attr("cy", d => this.yScale(d.value.p.y))
                     .attr("fill", "red")
-                    .attr("r", 4)
+                    .attr("r", 6)
                     .on("mouseover", function(d) { d3.select(this).attr("stroke", "black").attr("stroke-width", 4) })
                     .on("mouseout", function(d) { d3.select(this).attr("stroke", "none") })
                     .call(drag)
@@ -143,12 +143,16 @@ class Graph extends React.Component {
 
     render () { return (
         <div className="Graph">
-            <h1>Radius graph</h1>
             <svg height={this.height} width={this.width}>
                 <g>
                     <rect fill={"#d6d6d6"} height={this.height} width={this.width}></rect>
                 </g>
             </svg>
+            <div className="ButtonContainer">
+                <div><button onClick={this.props.onReverse}>REVERSE</button></div>
+                <div><button onClick={this.props.onSnap}>SNAP</button></div>
+                <div><button onClick={this.props.onDefault}>DEFAULT</button></div>
+            </div>
         </div>
         )
     }

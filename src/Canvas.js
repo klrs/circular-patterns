@@ -76,8 +76,13 @@ class Canvas extends React.Component {
 
     render() { return (
         <div className="Canvas">
-            <h1>Canvas</h1>
-            <canvas ref={this.state.canvasRef} height={480} width={480} />
+            <div>
+                <canvas ref={this.state.canvasRef} height={650} width={720} />
+                <div className="ButtonContainer">
+                    <div><button onClick={this.onPlay}>PLAY</button></div>
+                    <div><button onClick={this.onClear}>CLEAR</button></div>
+                </div>
+            </div>
         </div>
     )}
 
