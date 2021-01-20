@@ -16,9 +16,10 @@ class Canvas extends React.Component {
     }
 
     nextPos(orientation) {
+        const radians = this.props.degreeData.get(orientation) / 360 * 2 * Math.PI
         return {
-            x: this.state.centerPos.x + (this.props.data.get(orientation) * Math.cos(orientation*2*Math.PI)),
-            y: this.state.centerPos.y - (this.props.data.get(orientation) * Math.sin(orientation*2*Math.PI))
+            x: this.state.centerPos.x + (this.props.radiusData.get(orientation) * Math.cos(radians)),
+            y: this.state.centerPos.y - (this.props.radiusData.get(orientation) * Math.sin(radians))
         }
     }
     

@@ -12,13 +12,15 @@ class Point {
 
 class Data {
 
-    constructor(prevPointList, initialize) {
+    constructor(prevPointList, initialize, id, y0, y1) {
         this.pointList = prevPointList  //not actually a list but an object
+        this.id = id    //should be same as App's state variable
+        this.startValues = {y0: y0, y1: y1} //save the values at App constructor in case reset is needed...
 
         if(initialize) {
             console.log("Initializing pointList.")
-            this.add({x: 1, y: 10}, "constant")
-            this.add({x: 0, y: 10}, "linear")
+            this.add({x: 1, y: y1}, "constant")
+            this.add({x: 0, y: y0}, "linear")
             //this.replace(0, 20, "linear")
         }
 
@@ -31,12 +33,20 @@ class Data {
         for (const [i, v] of Object.entries(this.pointList)) {
             newList[i] = v.copy()
         }
-        return new Data(newList, false)
+        return new Data(newList, false, this.id, this.startValues.y0, this.startValues.y1)
+    }
+
+    emptyCopy() {
+        return new Data({}, false, this.id, this.startValues.y0, this.startValues.y1)
+    }
+
+    resetCopy() {
+        return new Data({}, true, this.id, this.startValues.y0, this.startValues.y1)
     }
 
     reverse() {
         //returns new Data object with points reversed
-        let newData = new Data({}, false)
+        let newData = this.emptyCopy()
         for(const [i, v] of Object.entries(this.pointList)) {
             if(i === 0) newData.add({x: 1 - v.p.x, y: v.p.y}, "constant")
             else newData.add({x: 1 - v.p.x, y: v.p.y}, "linear")
@@ -47,7 +57,7 @@ class Data {
 
     snap() {
         const snapValue = this.pointList[1].p.y - this.pointList[0].p.y
-        let newData = new Data({}, false)
+        let newData = this.emptyCopy()
 
         for(const [i, v] of Object.entries(this.pointList)) {
             if(i === 1) newData.add({x: v.p.x, y: v.p.y + snapValue}, "constant")
@@ -126,8 +136,8 @@ class Data {
 
     getScale() {
         return {
-            min: this.pointList[1].p.y - 50,
-            max: this.pointList[1].p.y + 50
+            min: this.get(0.5) - this.startValues.y1,
+            max: this.get(0.5) + this.startValues.y1
         }
     }
 

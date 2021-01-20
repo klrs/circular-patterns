@@ -5,8 +5,11 @@ import Graph from './Graph';
 import Data, { Point } from './Data';
 import HeadBar from './HeadBar';
 import { render } from 'react-dom';
+import { timeHours } from 'd3';
 
 class App extends React.Component {
+
+  //TODO CREATE SMART SCALING FOR DIFFERENT DATA
 
   constructor(props) {
     super(props)
@@ -17,84 +20,92 @@ class App extends React.Component {
     this.onReverse = this.onReverse.bind(this)
     this.onSnap = this.onSnap.bind(this)
     this.onDefault = this.onDefault.bind(this)
-    this.onNavigation = this.onNavigation.bind(this)
+    this.onViewChange = this.onViewChange.bind(this)
     this.state = {
       //data: []
-      data: new Data({}, true),
-      yScaleMin: -50, yScaleMax: 50,
-      view: "canvas"
+      radiusData: new Data({}, true, "radiusData", 50, 50),
+      radiusDataScale: {min: 0, max: 0},
+      degreeData: new Data({}, true, "degreeData", 0, 360),
+      degreeDataScale: {min: 0, max: 0},
+      view: "radius"
     }
   }
 
   componentDidMount() {
-    //this.setState({data: this.state.data.copy()})
-    //this.onChange(0, 20)
+    this.setState({
+      radiusDataScale: this.state.radiusData.getScale(),
+      degreeDataScale: this.state.degreeData.getScale()
+    })
   }
 
   componentDidUpdate() {}
 
-  onChange(i, py) {
-    this.state.data.replace(i, py, "linear")
-    this.setState({data: this.state.data.copy()})
+  onChange(i, py, data) {
+    data.replace(i, py, "linear")
+    this.setState({[data.id]: data.copy()})
   }
 
-  onAdd(px, py) {
-    this.state.data.add({x: px, y: py}, "linear")
-    this.setState({data: this.state.data.copy()})
+  onAdd(px, py, data) {
+    data.add({x: px, y: py}, "linear")
+    this.setState({[data.id]: data.copy()})
   }
 
-  onReverse() {
-    this.setState({data: this.state.data.reverse()})
+  onReverse(data) {
+    console.log("onReverse called")
+    this.setState({[data.id]: data.reverse()})
   }
 
-  onSnap() {
-    console.log("scale:" + this.state.yScaleMin + " " + this.state.yScaleMax)
-
+  onSnap(data) {
+    const newData = data.snap()
     this.setState({
-      data: this.state.data.snap(),
-      yScaleMin: this.state.data.getScale().min,
-      yScaleMax: this.state.data.getScale().max
-    })
-    //TODO NOT THE BEST SYSTEM FOR USER.
-    //CHANGE X AXIS
-    console.log("scale:" + this.state.yScaleMin + " " + this.state.yScaleMax)
-  }
-
-  onDefault() {
-    this.setState({
-      data: new Data({}, true),
-      yScaleMin: -50,
-      yScaleMax: 50
+      [data.id]: newData,
+      [data.id + "Scale"]: newData.getScale()
     })
   }
 
-  onNavigation(view) {
+  onDefault(data) {
+    const newData = data.resetCopy()
+    this.setState({
+      [data.id]: newData,
+      [data.id + "Scale"]: newData.getScale()
+    })
+  }
+
+  onViewChange() {
+    let view
+    if(this.state.view === "radius") view = "degree"
+    else view = "radius"
+    
     this.setState({view: view})
   }
 
   render() {
     let view
-    if(this.state.view === "canvas") {
-      view = <Canvas data={this.state.data} setPlay={play => this.playCanvas = play} setClear={clear => this.clearCanvas = clear}/>
-    }
-    else if(this.state.view === "graph") {
+    if(this.state.view === "radius") {
       view = <Graph
-        data={this.state.data} onChange={this.onChange} onAdd={this.onAdd}
-        xMin={0} xMax={1} yMin={this.state.yScaleMin} yMax={this.state.yScaleMax}
+        data={this.state.radiusData} onChange={this.onChange} onAdd={this.onAdd} color="red"
+        xMin={0} xMax={1} yMin={this.state.radiusDataScale.min} yMax={this.state.radiusDataScale.max}
+        onReverse={this.onReverse} onSnap={this.onSnap} onDefault={this.onDefault}
+      />
+    }
+    else if(this.state.view === "degree") {
+      view = <Graph
+        data={this.state.degreeData} onChange={this.onChange} onAdd={this.onAdd} color="blue"
+        xMin={0} xMax={1} yMin={this.state.degreeDataScale.min} yMax={this.state.degreeDataScale.max}
+        onReverse={this.onReverse} onSnap={this.onSnap} onDefault={this.onDefault}
       />
     }
 
     return (
       <div className="App">
-        <HeadBar onNavigation={this.onNavigation}/>
+        <HeadBar onViewChange={this.onViewChange}/>
         <div className="Body">
           <div className="Meat">
-            <Canvas data={this.state.data} setPlay={play => this.playCanvas = play} setClear={clear => this.clearCanvas = clear}/>
-            <Graph
-              data={this.state.data} onChange={this.onChange} onAdd={this.onAdd}
-              xMin={0} xMax={1} yMin={this.state.yScaleMin} yMax={this.state.yScaleMax}
-              onReverse={this.onReverse} onSnap={this.onSnap} onDefault={this.onDefault}
+            <Canvas
+              radiusData={this.state.radiusData} degreeData={this.state.degreeData}
+              setPlay={play => this.playCanvas = play} setClear={clear => this.clearCanvas = clear}
             />
+            {view}
           </div>
           {/* <div className="Buttons">
             <button onClick={() => this.playCanvas()}>Play</button>

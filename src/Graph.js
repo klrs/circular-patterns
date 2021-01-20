@@ -47,7 +47,7 @@ class Graph extends React.Component {
 
         const drag = d3.drag()
             .on("drag", (event, d) => {
-                this.props.onChange(d.value.p.x, this.yScale.invert(event.y))
+                this.props.onChange(d.value.p.x, this.yScale.invert(event.y), this.props.data)
             })
             //.subject({x: this.xScale(0), y: this.yScale(0)})
 
@@ -60,7 +60,7 @@ class Graph extends React.Component {
                     .attr("id", "pathPoints")
                     .attr("cx", d => this.xScale(d.value.p.x))
                     .attr("cy", d => this.yScale(d.value.p.y))
-                    .attr("fill", "red")
+                    .attr("fill", this.props.color)
                     .attr("r", 6)
                     .on("mouseover", function(d) { d3.select(this).attr("stroke", "black").attr("stroke-width", 4) })
                     .on("mouseout", function(d) { d3.select(this).attr("stroke", "none") })
@@ -94,7 +94,7 @@ class Graph extends React.Component {
             .datum(data)
                 .attr("d", line)
                 .attr("fill", "none")
-                .attr("stroke", "red")
+                .attr("stroke", this.props.color)
                 .attr("stroke-width", 2)
     }
 
@@ -133,7 +133,7 @@ class Graph extends React.Component {
 
         d3.select("rect")
             .on("click", event => {
-                this.props.onAdd(this.xScale.invert(d3.pointer(event)[0]), this.yScale.invert(d3.pointer(event)[1]))
+                this.props.onAdd(this.xScale.invert(d3.pointer(event)[0]), this.yScale.invert(d3.pointer(event)[1]), this.props.data)
             })
         svg.selectAll(".axes").remove()
         svg.selectAll(".grid").remove()
@@ -149,9 +149,9 @@ class Graph extends React.Component {
                 </g>
             </svg>
             <div className="ButtonContainer">
-                <div><button onClick={this.props.onReverse}>REVERSE</button></div>
-                <div><button onClick={this.props.onSnap}>SNAP</button></div>
-                <div><button onClick={this.props.onDefault}>DEFAULT</button></div>
+                <div><button onClick={() => { this.props.onReverse(this.props.data) }}>REVERSE</button></div>
+                <div><button onClick={() => { this.props.onSnap(this.props.data) }}>SNAP</button></div>
+                <div><button onClick={() => { this.props.onDefault(this.props.data) }}>DEFAULT</button></div>
             </div>
         </div>
         )
