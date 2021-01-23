@@ -29,9 +29,17 @@ class App extends React.Component {
       degreeDataScale: {min: 0, max: 0},
       view: "radius"
     }
+    this.sideLength = this.getSideLength()  //used to set graphs and canvas's widht & height
+    console.log(this.sideLength)
+  }
+
+  getSideLength() {
+    if(window.innerWidth > 720) return window.innerWidth * 0.35
+    else return window.innerWidth
   }
 
   componentDidMount() {
+    //console.log("inner: ", window.innerWidth, window.innerHeight)
     this.setState({
       radiusDataScale: this.state.radiusData.getScale(),
       degreeDataScale: this.state.degreeData.getScale()
@@ -83,6 +91,7 @@ class App extends React.Component {
     let view
     if(this.state.view === "radius") {
       view = <Graph
+        width={this.sideLength} height={this.sideLength}
         data={this.state.radiusData} onChange={this.onChange} onAdd={this.onAdd} color="red"
         xMin={0} xMax={1} yMin={this.state.radiusDataScale.min} yMax={this.state.radiusDataScale.max}
         onReverse={this.onReverse} onSnap={this.onSnap} onDefault={this.onDefault}
@@ -90,6 +99,7 @@ class App extends React.Component {
     }
     else if(this.state.view === "degree") {
       view = <Graph
+        width={this.sideLength} height={this.sideLength}
         data={this.state.degreeData} onChange={this.onChange} onAdd={this.onAdd} color="blue"
         xMin={0} xMax={1} yMin={this.state.degreeDataScale.min} yMax={this.state.degreeDataScale.max}
         onReverse={this.onReverse} onSnap={this.onSnap} onDefault={this.onDefault}
@@ -98,11 +108,11 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <HeadBar onViewChange={this.onViewChange}/>
+        <HeadBar onViewChange={this.onViewChange} parameter={this.state.view}/>
         <div className="Body">
           <div className="Meat">
             <Canvas
-              radiusData={this.state.radiusData} degreeData={this.state.degreeData}
+              radiusData={this.state.radiusData} degreeData={this.state.degreeData} width={this.sideLength} height={this.sideLength}
               setPlay={play => this.playCanvas = play} setClear={clear => this.clearCanvas = clear}
             />
             {view}

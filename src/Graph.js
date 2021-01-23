@@ -7,7 +7,7 @@ class Graph extends React.Component {
     constructor(props) {
         super(props)
         this.margin = {top: 20, right: 30, bottom: 20, left: 30}
-        this.width = 720; this.height = 650;
+        this.width = props.width; this.height = props.height;
         this.xScale = null
         this.yScale = null
     }

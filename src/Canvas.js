@@ -5,8 +5,9 @@ class Canvas extends React.Component {
     constructor(props) {
         super(props);
 
-        this.onPlay = this.onPlay.bind(this);
-        this.onClear = this.onClear.bind(this);
+        this.onPlay = this.onPlay.bind(this)
+        this.onClear = this.onClear.bind(this)
+        this.onSave = this.onSave.bind(this)
 
         this.state = {
             canvasRef: React.createRef(),
@@ -75,18 +76,37 @@ class Canvas extends React.Component {
         ctx.clearRect(0, 0, this.state.canvasRef.current.width, this.state.canvasRef.current.height)
     }
 
+    onSave() {
+        var link = document.createElement("a");
+        link.download = "canvas.png";
+        link.href = this.state.canvasRef.current.toDataURL("image/png");
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     render() { return (
         <div className="Canvas">
             <div>
-                <canvas ref={this.state.canvasRef} height={650} width={720} />
+                <canvas ref={this.state.canvasRef} height={this.props.height} width={this.props.width} />
                 <div className="ButtonContainer">
                     <div><button onClick={this.onPlay}>PLAY</button></div>
                     <div><button onClick={this.onClear}>CLEAR</button></div>
+                    <div><button onClick={this.onSave}>SAVE</button></div>
                 </div>
             </div>
         </div>
     )}
 
+}
+
+function Downloader(props) {
+    return (
+        React.createElement('a', {
+            download: 'canvas.png',
+            href: props.canvas.toDataURL('image/png')}, null)
+    )
 }
 
 export default Canvas

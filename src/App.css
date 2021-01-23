@@ -1,13 +1,13 @@
 .HeadBar {
-  background-color: red;
+  background-color: rgb(204, 152, 152);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .HeadBar #logo {
   text-align: center;
-}
-
-.HeadBar #header {
-  text-align: center
+  margin-right: 10px;
 }
 
 .Meat {
@@ -21,8 +21,8 @@
   justify-content: space-around;
 }
 
-.ButtonContainer button {
-  background-color: red;
+button {
+  background-color: rgb(204, 152, 152);
   color: white;
   display: block;
   font-size: 16px;
@@ -31,7 +31,7 @@
   border: none;
 }
 
-.ButtonContainer button:hover {
+button:hover {
   background-color: rgb(134, 134, 134);
 }
 
